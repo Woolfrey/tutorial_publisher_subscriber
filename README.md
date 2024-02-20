@@ -2,6 +2,9 @@
 
 ## Contents
 
+- [What are they?](#what-are-they)
+- [The Tutorial](#the-tutorial)
+
 ## What are they?
 
 A ROS `publisher` is analogous to a newsagency. A literary publisher will print and distribute newspapers or magazines at regular intervals (daily, weekly, monthly) and make them publically available at places like a newsagent. Multiple people are then free to purchase or subscribe to the media that is relevant to their interests.

@@ -1,11 +1,15 @@
 # ROS2 Tutorial : Publisher & Subscriber
 
+:bangbang: _The new paradigm for ROS2 is to use Object Oriented Programming (OOP). These tutorials are in the style of ROS1, and are deliberately simplified to make it easier to understand._
+
 ## Contents
 
 - [What are they?](#what-are-they)
 - [The Tutorial](#the-tutorial)
      - [1. Writing a Publisher](#1-writing-a-publisher)
      - [2. Writing a Subscriber](#2-writing-a-subscriber)
+ 
+
 
 ## What are they?
 
@@ -143,7 +147,11 @@ This line starts up the ROS2 (if its not already running):
 ```
 rclcpp::init(argc,argv);
 ```
-In these lines, we create a node object that is registered as `haiku_publisher` on the ROS network. Then we generate a publisher from said node, advertising the topic `haiku`, with a queue length of `10`:
+In these lines, we:
+1. Create a node object that is registered as `haiku_publisher` on the ROS network,
+2. Generate a publisher from said node,
+3. Advertise the topic `haiku`,
+4. With a queue length of `10`:
 ```
 rclcpp::Node node("haiku_publisher");
 
@@ -169,5 +177,114 @@ loopRate.sleep();
 
 ### 2. Writing a Subscriber
 _______________________________________________________
+
+i) In `tutorial_publisher_subscriber/src` create a file called `haiku_subscriber.cpp` and add the following code:
+```
+#include <rclcpp/rclcpp.hpp>                                                                        // Fundamental ROS2 C++ packages
+#include <std_msgs/msg/string.hpp>                                                                  // String message type
+
+using namespace std::placeholders;                                                                  // For the std::bind() function below
+
+// NOTE: This style is no longer recommended with ROS2.
+rclcpp::Node::SharedPtr node = nullptr;                                                             // Forward declaration     
+
+/**
+ * Forward declaration of callback function.
+ * It reads the '/haiku' topic and prints out the message.
+ * @param message A string message obtained from the specified ROS topic.
+ */
+void callback(const std_msgs::msg::String &message)
+{
+     RCLCPP_INFO(node->get_logger(), message.data.c_str());                                         // Print out message to console
+}
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+ //                                            MAIN                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+int main(int argc, char* argv[])
+{
+     rclcpp::init(argc,argv);                                                                       // Starts up ROS2
+     
+     node = rclcpp::Node::make_shared("haiku_subscriber");                                          // Create and assign node to previously declared memory address
+
+     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber
+     = node->create_subscription<std_msgs::msg::String>("haiku", 10, callback);                     // Create subscriber to "haiku" topic, queue length 10, using callback()
+     
+     RCLCPP_INFO(node->get_logger(), "Subscribing to '/haiku'.");                                   // Inform user
+     
+     rclcpp::spin(node);                                                                            // Run the node indefinitely
+     
+     rclcpp::shutdown();                                                                            // Shut down ROS
+        
+     return 0;                                                                                      // No problems with main()
+}
+```
+ii) Add the following to `CMakeLists.txt`:
+```
+add_executable(haiku_subscriber src/haiku_subscriber.cpp)
+ament_target_dependencies(haiku_subscriber
+                          "rclcpp"
+                          "std_msgs")
+```
+iii) Be sure to list `haiku_subscriber` to the install targets in `CMakeLists.txt` too:
+```
+install(TARGETS
+        haiku_publisher
+        haiku_subscriber
+        DESTINATION lib/${PROJECT_NAME}/
+)
+```
+iv) Navigate back to the root of your ROS2 workspace and run:
+```
+colcon build --packages-select tutorial_publisher_subscriber
+```
+v) Start the publisher node (if its not already running):
+```
+ros2 run tutorial_publisher_subscriber haiku_publisher
+```
+vi) Start the subscriber node:
+```
+ros2 run tutorial_publisher_subscriber haiku_subscriber
+```
+You should see the lines of the haiku being printed to the terminal window:
+```
+[INFO] [1708451145.235029636] [haiku_subscriber]: Subscribing to '/haiku'.
+[INFO] [1708451145.566348944] [haiku_subscriber]: Worker bees can leave.
+[INFO] [1708451146.566151229] [haiku_subscriber]: Even drones can fly away.
+[INFO] [1708451147.566327254] [haiku_subscriber]: The Queen is their slave.
+```
+
+#### :mag: The Code Explained
+_____________________________
+
+This is a forward declaration with memory allocation so that the node can be read both in the scope of the `callback()` function and `main()`:
+```
+rclcpp::Node::SharedPtr node = nullptr;
+```
+:exclamation: It is not recommended that you code in this style. ROS2 recommends [object oriented programming](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html), though it is very complicated for beginners :eyes:
+
+This callback function will be linked to an ensuing node. It will be executed every time a new message appears on the `/haiku` topic. It simply prints out the message it receives:
+```
+void callback(const std_msgs::msg::String &message)
+{
+     RCLCPP_INFO(node->get_logger(), message.data.c_str());
+}
+```
+This assigns a node object to the memory address:
+```
+     node = rclcpp::Node::make_shared("haiku_subscriber");
+```
+In this line of code we:
+1. Generate a subscriber from the previously declared node,
+2. Tell it to read the `haiku` topic,
+3. Store up to `10` messages, and
+4. Execute the `callback` function whenever it receives a new message:
+```
+rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber = node->create_subscription<std_msgs::msg::String>("haiku", 10, callback);
+```
+Now we tell ROS to run the node and process received messages indefinitely:
+```
+rclcpp::spin(node);
+```
 
 :arrow_backward: [Go back.](#ros2-tutorial--publisher--subscriber)

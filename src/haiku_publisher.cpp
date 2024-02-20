@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
      {
           std_msgs::msg::String message;                                                            // To be published
           
-          if(line == 1)      message.data = "Worker bees can leave.";
+          if     (line == 1) message.data = "Worker bees can leave.";
           else if(line == 2) message.data = "Even drones can fly away.";
           else if(line == 3) message.data = "The Queen is their slave.";
           
@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
  
           loopRate.sleep();                                                                         // Regulate while() loop at given rate
      }
-     
+
+     rclcpp::shutdown();                                                                            // Shut down ROS
+        
      return 0;                                                                                      // No problems with main()
 }

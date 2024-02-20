@@ -38,6 +38,8 @@ ROS has 3 types of communication paradigms:
 | Server        | Client        | Direct           | By request  |
 | Action Server | Action Client | Direct           | By request with continuous updates  |
 
+:arrow_backward: [Go back.](#ros2-tutorial--publisher--subscriber)
+
 ## The Tutorial
 _________________________
 Be sure to source ROS (if it isn't already in your .bashrc):
@@ -163,5 +165,9 @@ And this line regulates the timing of the `while()` loop:
 loopRate.sleep();
 ```
 
+:arrow_backward: [Go back.](#ros2-tutorial--publisher--subscriber)
+
 ### 2. Writing a Subscriber
 _______________________________________________________
+
+:arrow_backward: [Go back.](#ros2-tutorial--publisher--subscriber)

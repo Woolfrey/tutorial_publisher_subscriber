@@ -19,6 +19,8 @@ Similarly, a `publisher` node generates information and makes it publically avai
 
 It is suitable for any kind of information that is generated frequently.
 
+![image_info](./assets/publisher_subscriber.png)
+
 In contrast, information that is required infrequently, and that might require some form of calculation or transformation, might be better distributed using a `client` and `server` paradigm. For example:
 - Acquiring map updates
 - Generating a new path plan
@@ -32,10 +34,8 @@ ROS has 3 types of communication paradigms:
 | Action Server | Action Client | Direct           | By request with continuous updates  |
 
 ## The Tutorial
-
-### 1. Create the package
-
-i) Be sure to source ROS (if it isn't already in your .bashrc):
+_________________________
+Be sure to source ROS (if it isn't already in your .bashrc):
 ```
 source /opt/ros/<distribution>/setup.bash
 ```
@@ -43,13 +43,13 @@ where `<distribution>` is the name of your ROS distribution (foxy, humble, etc.)
 ```
 source ./install/setup.bash
 ```
-ii) In your ROS2 workspace, create a new package:
-
+In your ROS2 workspace, create a new package:
 ```
 ros2 pkg create --dependencies rclcpp std_msgs -- tutorial_publisher_subscriber
 ```
 
-### 2. Writing a Publisher
+### 1. Writing a Publisher
+_____________________________
 
 i) In the folder `tutorial_publisher_subscriber/src`, create `haiku_publisher.cpp` and insert the following code:
 ```
@@ -129,7 +129,8 @@ vii) You can check the haiku is being published using:
 ```
 ros2 topic echo /haiku
 ```
-#### The Code Explained
+#### :mag: The Code Explained
+_____________________________
 
 This line starts up the ROS2 (if its not already running):
 ```
@@ -157,4 +158,5 @@ And this line regulates the timing of the `while()` loop:
 loopRate.sleep();
 ```
 
-### Writing a Subscriber
+### 2. Writing a Subscriber
+_______________________________________________________

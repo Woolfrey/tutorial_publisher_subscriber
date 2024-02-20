@@ -4,6 +4,8 @@
 
 - [What are they?](#what-are-they)
 - [The Tutorial](#the-tutorial)
+     - [1. Writing a Publisher](#1-writing-a-publisher)
+     - [2. Writing a Subscriber](#2-writing-a-subscriber)
 
 ## What are they?
 

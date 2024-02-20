@@ -10,6 +10,7 @@ endif()
 ####################################################################################################
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
 if(BUILD_TESTING)
      find_package(ament_lint_auto REQUIRED)
@@ -23,8 +24,16 @@ endif()
 ####################################################################################################
 #                                          EXECUTABLES                                             #
 ####################################################################################################
+
 add_executable(haiku_publisher src/haiku_publisher.cpp)
 ament_target_dependencies(haiku_publisher
-                          "rclcpp")
+                          "rclcpp"
+                          "std_msgs")
+
+# This is so ROS2 can find the executable when we call `ros2 run`                        
+install(TARGETS
+        haiku_publisher
+        DESTINATION lib/${PROJECT_NAME}/
+)
 
 ament_package()

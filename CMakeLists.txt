@@ -29,10 +29,16 @@ add_executable(haiku_publisher src/haiku_publisher.cpp)
 ament_target_dependencies(haiku_publisher
                           "rclcpp"
                           "std_msgs")
+                          
+add_executable(haiku_subscriber src/haiku_subscriber.cpp)
+ament_target_dependencies(haiku_subscriber
+                          "rclcpp"
+                          "std_msgs")
 
 # This is so ROS2 can find the executable when we call `ros2 run`                        
 install(TARGETS
         haiku_publisher
+        haiku_subscriber
         DESTINATION lib/${PROJECT_NAME}/
 )
 

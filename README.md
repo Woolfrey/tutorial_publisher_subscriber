@@ -19,6 +19,8 @@ Similarly, a `publisher` node generates information and makes it publically avai
 
 It is suitable for any kind of information that is generated frequently.
 
+![image_info](./assets/publisher_subscriber.png)
+
 In contrast, information that is required infrequently, and that might require some form of calculation or transformation, might be better distributed using a `client` and `server` paradigm. For example:
 - Acquiring map updates
 - Generating a new path plan

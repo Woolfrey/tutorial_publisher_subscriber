@@ -4,35 +4,36 @@
 
 ## Contents
 
-- [What are they?](#what-are-they)
+- [What is it?](#what-is-it)
 - [The Tutorial](#the-tutorial)
      - [1. Writing a Publisher](#1-writing-a-publisher)
      - [2. Writing a Subscriber](#2-writing-a-subscriber)
  
 
 
-## What are they?
+## What is it?
 
 A ROS `publisher` is analogous to a newsagency. A literary publisher will print and distribute newspapers or magazines at regular intervals (daily, weekly, monthly) and make them publically available at places like a newsagent. Multiple people are then free to purchase or subscribe to the media that is relevant to their interests.
 
 ![image info](./assets/analogy.png)
 
-Similarly, a `publisher` node generates information and makes it publically available on the ROS network. A `subscriber` node can then obtain this information for its own use. Examples include:
-- Sensor information:
-     - Joint positions
-     - Laser scans
-     - Depth sensor
-- Location information:
-     - Robot pose
-     - GPS location
-
-It is suitable for any kind of information that is generated frequently.
+Similarly, a `publisher` node generates information and makes it publically available on the ROS network. A `subscriber` node can then obtain this information for its own use. 
 
 ![image_info](./assets/publisher_subscriber.png)
 
-In contrast, information that is required infrequently, and that might require some form of calculation or transformation, might be better distributed using a `client` and `server` paradigm. For example:
-- Acquiring map updates
-- Generating a new path plan
+Publishers & subscribers are useful for information that is being generated continuously. Examples include:
+- Sensor readings:
+     - Joint positions
+     - Laser scans
+     - Depth sensors
+- Location information:
+     - GPS locations
+     - Robot poses
+     - etc.
+
+In contrast, information that is required _infrequently_ (particularly if it requires some kind of calculation or transformation) might be better distributed using a `client` and `server` paradigm. For example:
+- Acquiring map updates, or
+- Generating a new path plan.
 
 ROS has 3 types of communication paradigms:
 
@@ -40,7 +41,7 @@ ROS has 3 types of communication paradigms:
 |---------------|---------------|------------------|-------------|
 | Publisher     | Subscriber    | Indirect         | Continuous  |
 | Server        | Client        | Direct           | By request  |
-| Action Server | Action Client | Direct           | By request with continuous updates  |
+| Action Server | Action Client | Direct           | By request, with continuous updates  |
 
 :arrow_backward: [Go back.](#ros2-tutorial--publisher--subscriber)
 
@@ -50,10 +51,8 @@ Be sure to source ROS (if it isn't already in your .bashrc):
 ```
 source /opt/ros/<distribution>/setup.bash
 ```
-where `<distribution>` is the name of your ROS distribution (foxy, humble, etc.). Also source from the root of your ROS workspace:
-```
-source ./install/setup.bash
-```
+where `<distribution>` is the name of your ROS distribution (foxy, humble, etc.).
+
 In your ROS2 workspace, create a new package:
 ```
 ros2 pkg create --dependencies rclcpp std_msgs -- tutorial_publisher_subscriber
@@ -119,7 +118,7 @@ install(TARGETS
         DESTINATION lib/${PROJECT_NAME}/
 )
 ```
-iii) Modify the `package.xml` file with the following:
+iii) Ensure the `package.xml` file has the following lines of code:
 ```
 <depend>rclcpp</depend>
 <depend>std_msgs</depend>
@@ -128,18 +127,26 @@ iv) Return to the root of your ROS2 workspace and run:
 ```
 colcon build --packages-select tutorial_publisher_subscriber
 ```
-v) Start up the node:
+v) Run the following command in the terminal so that ROS2 can find the newly created package:
+```
+source ./install/setup.bash
+```
+vi) Start up the node:
 ```
 ros2 run tutorial_publisher_subscriber haiku_publisher
 ```
-vi) In another terminal, you can check the existance of the `/haiku` topic:
+vii) Check the existance of the `/haiku` topic with the following command in another terminal:
 ```
 ros2 topic list
 ```
-vii) You can check the haiku is being published using:
+<img src="https://github.com/Woolfrey/tutorial_publisher_subscriber/assets/62581255/82314538-4d8b-49e9-8a7b-01eb58bd7e88" alt="image" width="600" height="auto">
+
+viii) You can check the haiku is being published using:
 ```
 ros2 topic echo /haiku
 ```
+<img src="https://github.com/Woolfrey/tutorial_publisher_subscriber/assets/62581255/27d305a2-4bcc-4ed3-8cb0-43d230e9d438" alt="image" width="600" height="auto">
+
 #### :mag: The Code Explained
 _____________________________
 
@@ -247,12 +254,7 @@ vi) Start the subscriber node:
 ros2 run tutorial_publisher_subscriber haiku_subscriber
 ```
 You should see the lines of the haiku being printed to the terminal window:
-```
-[INFO] [1708451145.235029636] [haiku_subscriber]: Subscribing to '/haiku'.
-[INFO] [1708451145.566348944] [haiku_subscriber]: Worker bees can leave.
-[INFO] [1708451146.566151229] [haiku_subscriber]: Even drones can fly away.
-[INFO] [1708451147.566327254] [haiku_subscriber]: The Queen is their slave.
-```
+<img src="https://github.com/Woolfrey/tutorial_publisher_subscriber/assets/62581255/2bea540d-68bf-4031-a94e-4a484c08977e" alt="image" width="900" height="auto">
 
 #### :mag: The Code Explained
 _____________________________
